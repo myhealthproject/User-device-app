@@ -1,4 +1,4 @@
-package com.github.myhealth.api;
+package com.github.myhealth.api.request;
 
 /**
  * Created by Henk Dieter Oordt on 26-9-2016.
@@ -7,8 +7,10 @@ package com.github.myhealth.api;
 /**
  * Class which represents a login request
  */
-class LoginRequest extends Request {
-    public LoginRequest(){
+public class LoginRequest extends PostRequest {
+
+    public LoginRequest(String email, String password){
+        super("login");
         //TODO implement
         throw new Error("Please implement");
     }

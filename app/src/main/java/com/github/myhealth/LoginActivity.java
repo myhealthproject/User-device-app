@@ -33,7 +33,10 @@ import android.widget.TextView;
 
 import com.github.myhealth.api.APIClient;
 import com.github.myhealth.api.APIResponseListener;
+import com.github.myhealth.api.response.LoginResponse;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +46,8 @@ import static android.Manifest.permission.READ_CONTACTS;
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+
+    public static final String EXTRA_TOKEN = "com.github.myhealth.logintoken";
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -325,7 +330,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         private final String mEmail;
         private final String mPassword;
         private Context mContext;
-        private Boolean success;
+        private String token;
 
         UserLoginTask(String email, String password, Context context) {
             mEmail = email;
@@ -341,14 +346,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             } catch (InterruptedException e) {
                 //return false;
             }
+            APIClient client = APIClient.getInstance();
 
-            APIClient.getInstance().logIn(mEmail, mPassword, new APIResponseListener() {
-                @Override
-                public void onResponse(Object... response) {
-                    success = (Boolean) response[0];
-                }
-            });
+            LoginResponse response = client.logIn(mEmail, mPassword);
+            token = response.getToken();
             return null;
+
         }
 
         @Override
@@ -356,9 +359,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = null;
             showProgress(false);
 
-            if (success) {
+            if (token != null && token.length() > 0) {
                 finish();
                 Intent intent = new Intent(mContext, MainActivity.class);
+                intent.putExtra(EXTRA_TOKEN, token);
                 startActivity(intent);
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));

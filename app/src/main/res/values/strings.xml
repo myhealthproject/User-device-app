@@ -16,4 +16,6 @@
         completions."
     </string>
     <string name="action_register">Register</string>
+
+    <string name="api_url">PLEASE INSERT CORRECT URL</string>
 </resources>
