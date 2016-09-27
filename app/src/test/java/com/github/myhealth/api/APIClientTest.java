@@ -38,7 +38,7 @@ public class APIClientTest {
     private static final List<Bill.Line> TEST_BILL_LINES = new ArrayList<Bill.Line>();
 
     static {
-
+        TEST_BILL_LINES.add(new Bill.Line("test description", "TESTCODE", 12.3));
     }
 
     private static String token;

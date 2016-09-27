@@ -1,6 +1,5 @@
 package com.github.myhealth.api;
 
-import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +13,18 @@ public class Bill {
     private int userId;
     private String status;
     private List<Line> lines;
-    public Bill(int id, int userId, String status, String[][] lines) throws ParseException {
+    public Bill(int id, int userId, String status, String[][] lines) throws NumberFormatException {
         this.id = id;
+        this.userId = userId;
         this.status = status;
         this.lines = createLines(lines);
+    }
+
+    public Bill(int id, int userId, String status, List<Line> lines){
+        this.id = id;
+        this.userId = userId;
+        this.status = status;
+        this.lines = lines;
     }
 
     public int getId() {
@@ -36,7 +43,7 @@ public class Bill {
         return lines;
     }
 
-    private ArrayList<Line> createLines(String[][] lines) throws ParseException {
+    public ArrayList<Line> createLines(String[][] lines) throws NumberFormatException {
         ArrayList<Line> lineList = new ArrayList<>();
         for(String[] line : lines){
             if(line.length == 3){
@@ -46,7 +53,7 @@ public class Bill {
         return lineList;
     }
 
-    public class Line {
+    public static class Line {
         public final String description, code;
         public final double price;
 
