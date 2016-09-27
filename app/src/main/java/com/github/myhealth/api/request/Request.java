@@ -18,6 +18,12 @@ public abstract class Request {
         this.path = path;
     }
 
-    //TODO add parameters
+
+    //TODO add param for connection
+
+    /**
+     * Opens the connection, sends the request and returns the raw response
+     * @return
+     */
     public abstract String execute();
 }

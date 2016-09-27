@@ -32,11 +32,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.github.myhealth.api.APIClient;
-import com.github.myhealth.api.APIResponseListener;
+import com.github.myhealth.api.InvalidRequestException;
 import com.github.myhealth.api.response.LoginResponse;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -348,7 +346,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
             APIClient client = APIClient.getInstance();
 
-            LoginResponse response = client.logIn(mEmail, mPassword);
+            LoginResponse response = null;
+            try {
+                response = client.logIn(mEmail, mPassword);
+            } catch (InvalidRequestException e) {
+                e.printStackTrace();
+            }
             token = response.getToken();
             return null;
 

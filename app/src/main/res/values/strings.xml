@@ -17,5 +17,5 @@
     </string>
     <string name="action_register">Register</string>
 
-    <string name="api_url">PLEASE INSERT CORRECT URL</string>
+    <string name="api_url">http://henkdieter.com:3000/api/</string>
 </resources>

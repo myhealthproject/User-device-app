@@ -9,9 +9,11 @@ package com.github.myhealth.api.request;
  */
 public class LoginRequest extends PostRequest {
 
+    private final String email, password;
+
     public LoginRequest(String email, String password){
-        super("login");
-        //TODO implement
-        throw new Error("Please implement");
+        super("login/");
+        this.email = email;
+        this.password = password;
     }
 }
