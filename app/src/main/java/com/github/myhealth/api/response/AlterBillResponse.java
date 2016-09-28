@@ -3,7 +3,7 @@ package com.github.myhealth.api.response;
 /**
  * Created by Henk Dieter Oordt on 27-9-2016.
  */
-public class AlterBillResponse extends Response {
+public class AlterBillResponse extends APIResponse {
     public AlterBillResponse(String raw) {
         super(raw);
     }

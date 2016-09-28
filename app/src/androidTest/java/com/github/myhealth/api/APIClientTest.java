@@ -1,5 +1,8 @@
 package com.github.myhealth.api;
 
+import android.content.Context;
+import android.util.Log;
+
 import com.github.myhealth.api.response.AlterBillResponse;
 import com.github.myhealth.api.response.AlterUserResponse;
 import com.github.myhealth.api.response.CreateBillResponse;
@@ -10,6 +13,8 @@ import com.github.myhealth.api.response.GetBillsByUserIDResponse;
 import com.github.myhealth.api.response.GetUserResponse;
 import com.github.myhealth.api.response.LoginResponse;
 import com.github.myhealth.api.response.CreateUserResponse;
+
+import org.mockito.Mockito;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -23,22 +28,26 @@ import static org.junit.Assert.*;
  * Created by Henk Dieter Oordt on 27-9-2016.
  */
 public class APIClientTest {
-    private static final String URL = "http://henkdieter.com:3000/api";
+    private static final String URL = "http://henkdieter.com/api/";
     private static APIClient apiClient;
 
-    private static final String TEST_USERNAME = "henkdieter@gmail.com   ";
-    private static final String TEST_PASSWORD = "wachtwoord1234";
+    private static final String TEST_USERNAME = "test";
+    private static final String TEST_PASSWORD = "password";
 
-    private static final String TEST_FIRST_NAME = "Henk Dieter";
-    private static final String TEST_LAST_NAME = "Oordt";
+    private static final String TEST_FIRST_NAME = "test";
+    private static final String TEST_LAST_NAME = "test";
 
-    private static final int TEST_USER_ID = 1;
+    private static final String TEST_USER_ID = "57ea6d74549b665082c7345e";
     private static final int TEST_BILL_ID = 1;
     private static final String TEST_BILL_STATUS = "paid";
     private static final List<Bill.Line> TEST_BILL_LINES = new ArrayList<Bill.Line>();
 
     static {
-        TEST_BILL_LINES.add(new Bill.Line("test description", "TESTCODE", 12.3));
+        try {
+            TEST_BILL_LINES.add(new Bill.Line("test description", "TESTCODE", 12.3));
+        } catch (Exception e){
+            e.getMessage();
+        }
     }
 
     private static String token;
@@ -50,7 +59,6 @@ public class APIClientTest {
 
     @Test
     public void getInstance() throws Exception {
-        assertTrue(TestAPIClient.getInstance(URL) == TestAPIClient.getInstance(URL));
         assertTrue(TestAPIClient.getInstance(URL) == TestAPIClient.getInstance(URL));
     }
 
@@ -64,7 +72,7 @@ public class APIClientTest {
 
     @Test
     public void createUser() throws Exception {
-        CreateUserResponse response = apiClient.createUser(TEST_USERNAME, TEST_PASSWORD, TEST_FIRST_NAME, TEST_LAST_NAME);
+        CreateUserResponse response = apiClient.createUser("henk", "Wachtwoord", "Henk Dieter", "Oordt");
         assertTrue(response.isSuccess());
         //TODO check that user is actually inserted
     }

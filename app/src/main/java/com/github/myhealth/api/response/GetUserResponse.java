@@ -4,7 +4,7 @@ package com.github.myhealth.api.response;
  * Created by Henk Dieter Oordt on 27-9-2016.
  */
 
-public class GetUserResponse extends Response {
+public class GetUserResponse extends APIResponse {
     private int id;
     private String firstName, lastName;
 

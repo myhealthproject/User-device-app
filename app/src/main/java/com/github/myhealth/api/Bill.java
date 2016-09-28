@@ -9,29 +9,29 @@ import java.util.List;
  */
 
 public class Bill {
-    public int id;
-    private int userId;
+    public String id;
+    private String userId;
     private String status;
     private List<Line> lines;
-    public Bill(int id, int userId, String status, String[][] lines) throws NumberFormatException {
+    public Bill(String id, String userId, String status, String[][] lines) throws NumberFormatException {
         this.id = id;
         this.userId = userId;
         this.status = status;
         this.lines = createLines(lines);
     }
 
-    public Bill(int id, int userId, String status, List<Line> lines){
+    public Bill(String id, String userId, String status, List<Line> lines){
         this.id = id;
         this.userId = userId;
         this.status = status;
         this.lines = lines;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 

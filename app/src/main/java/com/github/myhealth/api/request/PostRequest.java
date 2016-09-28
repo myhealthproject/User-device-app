@@ -1,18 +1,56 @@
 package com.github.myhealth.api.request;
 
-import com.github.myhealth.api.request.Request;
-import com.github.myhealth.api.request.RequestMethod;
+import android.util.Log;
+
+import com.github.myhealth.Const;
+
+import org.apache.commons.io.IOUtils;
+
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 
 /**
  * Created by Henk Dieter Oordt on 26-9-2016.
  */
-public class PostRequest extends Request {
-    protected PostRequest( String path) {
-        super(RequestMethod.POST, path);
+public abstract class PostRequest extends APIRequest {
+    protected PostRequest(String path) {
+        super(path);
     }
 
+    /**
+     * Builds post data
+     * @return
+     */
+    protected abstract String buildPostData();
+
     @Override
-    public String execute() {
-        return null;
+    public String execute(String apiURL) throws IOException {
+        URL url;
+        HttpURLConnection connection = null;
+        String response = null;
+        try {
+            Log.d(Const.LOG_TAG, "POST TO " + apiURL + path);
+            url = new URL(apiURL + path);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setDoOutput(true);
+            connection.setRequestMethod("POST");
+            connection.connect();
+
+            DataOutputStream wr = new DataOutputStream(
+                    connection.getOutputStream ());
+            wr.writeBytes(buildPostData());
+            wr.flush();
+            wr.close ();
+            InputStream is = connection.getInputStream();
+            response = IOUtils.toString(is);
+            Log.d(Const.LOG_TAG, "RESPONSE: " + response);
+        } finally {
+            connection.disconnect();
+            return response;
+        }
     }
 }

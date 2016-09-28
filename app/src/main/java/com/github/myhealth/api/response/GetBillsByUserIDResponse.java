@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by Henk Dieter Oordt on 27-9-2016.
  */
-public class GetBillsByUserIDResponse extends Response{
+public class GetBillsByUserIDResponse extends APIResponse {
     public GetBillsByUserIDResponse(String raw) {
         super(raw);
     }

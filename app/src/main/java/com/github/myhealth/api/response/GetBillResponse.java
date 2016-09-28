@@ -7,8 +7,8 @@ import java.text.ParseException;
 /**
  * Created by Henk Dieter Oordt on 27-9-2016.
  */
-public class GetBillResponse extends Response {
-    private int id, userId;
+public class GetBillResponse extends APIResponse {
+    private String id, userId;
     private String status;
     private String[][] lines;
 
@@ -25,11 +25,11 @@ public class GetBillResponse extends Response {
 
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public int getUserID() {
+    public String getUserID() {
         return userId;
     }
 

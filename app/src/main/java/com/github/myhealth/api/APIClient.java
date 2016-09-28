@@ -5,7 +5,9 @@ package com.github.myhealth.api;
  */
 
 import android.content.res.Resources;
+import android.util.Log;
 
+import com.github.myhealth.Const;
 import com.github.myhealth.R;
 import com.github.myhealth.api.request.AlterBillRequest;
 import com.github.myhealth.api.request.AlterUserRequest;
@@ -26,22 +28,22 @@ import com.github.myhealth.api.response.GetBillResponse;
 import com.github.myhealth.api.response.GetBillsByUserIDResponse;
 import com.github.myhealth.api.response.GetUserResponse;
 import com.github.myhealth.api.response.LoginResponse;
-import com.github.myhealth.api.request.Request;
+import com.github.myhealth.api.request.APIRequest;
 import com.github.myhealth.api.response.CreateUserResponse;
 
-import java.io.InputStream;
+import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
- * This is a singleton class, because we want to talk to the api one request at a time
+ * Class used to communicate with the API.
+ * This is a singleton class, because we want to talk to the api one request at a time.
+ * Please note that all requests will block the requesting thread, so that they should be made
+ * from another thread than the main thread, e.g. by an AsyncTask
+ * @author Henk Dieter Oordt
  */
 public class APIClient {
     protected static volatile APIClient instance;
-
-
-    /**
-     * The default API url is extracted from a string resource, so that it can be accessed easily
-     */
 
     private static String apiURL;
 
@@ -50,6 +52,8 @@ public class APIClient {
         this.apiURL = apiURL;
     }
 
+    private String token = null;
+
     /**
      * @return a new instance of the APIClient
      */
@@ -57,12 +61,14 @@ public class APIClient {
         if (instance == null) {
             synchronized (APIClient.class) {
                 if (instance == null) {
-                    instance = new APIClient(Resources.getSystem().getString(R.string.api_url));
+                    //The default API url is extracted from a string resource, so that it can be accessed easily
+                    instance = new APIClient(Const.API_URL);
                 }
             }
         }
         return instance;
     }
+
 
     /**
      * Creates a new API call, executes and parses its response, after which it returns the response
@@ -70,12 +76,14 @@ public class APIClient {
      * @param email
      * @param password
      * @return The parsed response
-     * @throws InvalidRequestException
+     * @throws IllegalStateException, InvalidRequestException
      */
-    public LoginResponse logIn(String email, String password) throws InvalidRequestException {
+    public LoginResponse logIn(String email, String password) throws InvalidRequestException, IOException {
         if(email.isEmpty()) throw new InvalidRequestException("No email given");
         if(password.isEmpty()) throw new InvalidRequestException("No password given");
-        return new LoginResponse(executeRequest(new LoginRequest(email, password)));
+        LoginResponse response = new LoginResponse(executeRequest(new LoginRequest(email, password)));
+        if(response.isSuccess()) token = response.getToken();
+        return response;
     }
 
 
@@ -88,9 +96,10 @@ public class APIClient {
      * @param firstName
      * @param lastName
      * @return The parsed response
-     * @throws InvalidRequestException
+     * @throws IllegalStateException, InvalidRequestException
      */
-    public CreateUserResponse createUser(String username, String password, String firstName, String lastName) throws InvalidRequestException {
+    public CreateUserResponse createUser(String username, String password, String firstName, String lastName) throws IllegalStateException, InvalidRequestException, IOException {
+        if(token == null) throw new IllegalStateException("Please log in first");
         if(username.isEmpty()) throw new InvalidRequestException("No username given");
         if(password.isEmpty()) throw new InvalidRequestException("No password given");
         if(firstName.isEmpty()) throw new InvalidRequestException("No first name given");
@@ -103,7 +112,8 @@ public class APIClient {
      * @param userId
      * @return
      */
-    public GetUserResponse getUser(int userId) {
+    public GetUserResponse getUser(String userId) throws IllegalStateException, IOException {
+        if(token == null) throw new IllegalStateException("Please log in first");
         return new GetUserResponse(executeRequest(new GetUserRequest(userId)));
     }
 
@@ -113,9 +123,10 @@ public class APIClient {
      * @param firstName
      * @param lastName
      * @return
-     * @throws InvalidRequestException
+     * @throws IllegalStateException, InvalidRequestException
      */
-    public AlterUserResponse alterUser(int userId, String username, String password, String firstName, String lastName) throws InvalidRequestException {
+    public AlterUserResponse alterUser(String userId, String username, String password, String firstName, String lastName) throws IllegalStateException, InvalidRequestException, IOException {
+        if(token == null) throw new IllegalStateException("Please log in first");
         if(username.isEmpty()) throw new InvalidRequestException("No username given");
         if(password.isEmpty()) throw new InvalidRequestException("No password given");
         if(firstName.isEmpty()) throw new InvalidRequestException("No first name given");
@@ -128,7 +139,8 @@ public class APIClient {
      * @param userId
      * @return
      */
-    public DeleteUserResponse deleteUser(int userId) {
+    public DeleteUserResponse deleteUser(String userId) throws IllegalStateException, IOException {
+        if(token == null) throw new IllegalStateException("Please log in first");
         return new DeleteUserResponse(executeRequest(new DeleteUserRequest(userId)));
     }
 
@@ -136,9 +148,10 @@ public class APIClient {
      * Gets a bill
      * @param billId
      * @return
-     * @throws InvalidRequestException
+     * @throws IllegalStateException, InvalidRequestException
      */
-    public GetBillResponse getBill(int billId) {
+    public GetBillResponse getBill(int billId) throws IllegalStateException, IOException {
+        if(token == null) throw new IllegalStateException("Please log in first");
         return new GetBillResponse(executeRequest(new GetBillRequest(billId)));
     }
 
@@ -147,7 +160,8 @@ public class APIClient {
      * @param userId
      * @return
      */
-    public GetBillsByUserIDResponse getBillsByUserID(int userId) {
+    public GetBillsByUserIDResponse getBillsByUserID(String userId) throws IllegalStateException, IOException {
+        if(token == null) throw new IllegalStateException("Please log in first");
         return new GetBillsByUserIDResponse(executeRequest(new GetBillsByUserIdRequest(userId)));
     }
 
@@ -158,7 +172,8 @@ public class APIClient {
      * @param lines
      * @return
      */
-    public CreateBillResponse createBill(int userId, String status, List<Bill.Line> lines) throws InvalidRequestException {
+    public CreateBillResponse createBill(String userId, String status, List<Bill.Line> lines) throws IllegalStateException, InvalidRequestException, IOException {
+        if(token == null) throw new IllegalStateException("Please log in first");
         if(status.isEmpty()) throw new InvalidRequestException("No status given");
         if(lines == null) throw new InvalidRequestException("lines == null");
         if(lines.size() == 0) throw new InvalidRequestException("No lines given");
@@ -172,9 +187,10 @@ public class APIClient {
      * @param status
      * @param lines
      * @return
-     * @throws InvalidRequestException
+     * @throws IllegalStateException, InvalidRequestException
      */
-    public AlterBillResponse alterBill(int billId, int userId, String status, List<Bill.Line> lines) throws InvalidRequestException{
+    public AlterBillResponse alterBill(int billId, String userId, String status, List<Bill.Line> lines) throws IllegalStateException, IOException, InvalidRequestException {
+        if(token == null) throw new IllegalStateException("Please log in first");
         if(status.isEmpty()) throw new InvalidRequestException("No status given");
         if(lines == null) throw new InvalidRequestException("lines == null");
         if(lines.size() == 0) throw new InvalidRequestException("No lines given");
@@ -186,7 +202,8 @@ public class APIClient {
      * @param billId
      * @return
      */
-    public DeleteBillResponse deleteBill(int billId) {
+    public DeleteBillResponse deleteBill(int billId) throws IllegalStateException, IOException {
+        if(token == null) throw new IllegalStateException("Please log in first");
         return new DeleteBillResponse(executeRequest(new DeleteBillRequest(billId)));
     }
 
@@ -195,12 +212,7 @@ public class APIClient {
      *
      * @param request
      */
-    private synchronized String executeRequest(Request request) {
-        return request.execute();
-    }
-
-    private InputStream connect() {
-        //TODO implement and have it return the connection's inputstream
-        return null;
+    private synchronized String executeRequest(APIRequest request) throws IllegalStateException, IOException {
+        return request.execute(apiURL);
     }
 }

@@ -1,5 +1,8 @@
 package com.github.myhealth.api.request;
 
+import android.content.Context;
+
+
 import com.github.myhealth.api.Bill;
 
 import java.util.List;
@@ -9,14 +12,19 @@ import java.util.List;
  */
 
 public class AlterBillRequest extends PostRequest {
-    private final int userId;
+    private final String userId;
     private final String status;
     private final List<Bill.Line> lines;
 
-    public AlterBillRequest(int billId, int userId, String status, List<Bill.Line> lines) {
+    public AlterBillRequest(int billId, String userId, String status, List<Bill.Line> lines) {
         super("bill/"+billId);
         this.userId = userId;
         this.status = status;
         this.lines = lines;
+    }
+
+    @Override
+    protected String buildPostData() {
+        return null;
     }
 }
