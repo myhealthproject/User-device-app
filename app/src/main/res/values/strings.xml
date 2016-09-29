@@ -16,4 +16,7 @@
         completions."
     </string>
     <string name="action_register">Register</string>
+    <string name="last_name_title">Last name</string>
+    <string name="f_name_title">First name</string>
+    <string name="profile_header">Profile</string>
 </resources>

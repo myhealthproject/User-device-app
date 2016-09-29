@@ -44,20 +44,13 @@ import static android.Manifest.permission.READ_CONTACTS;
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
-    public static final String EXTRA_TOKEN = "com.github.myhealth.logintoken";
+    public static final String EXTRA_USER_ID = "com.github.myhealth.userId";
 
     /**
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
 
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -307,7 +300,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         private final String mEmail;
         private final String mPassword;
         private final Context mContext;
-        private String token;
+        private LoginResponse response;
 
         UserLoginTask(String email, String password, Context context) {
             mEmail = email;
@@ -325,13 +318,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
             APIClient client = APIClient.getInstance();
 
-            LoginResponse response = null;
             try {
                 response = client.logIn(mEmail, mPassword);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            token = response.getToken();
             return null;
 
         }
@@ -341,10 +332,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = null;
             showProgress(false);
 
-            if (token != null && token.length() > 0) {
+            if (response.isSuccess()) {
                 finish();
                 Intent intent = new Intent(mContext, MainActivity.class);
-                intent.putExtra(EXTRA_TOKEN, token);
+                intent.putExtra(EXTRA_USER_ID, response.getUserId());
                 startActivity(intent);
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));

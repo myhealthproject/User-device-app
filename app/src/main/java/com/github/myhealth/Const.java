@@ -5,6 +5,6 @@ package com.github.myhealth;
  */
 
 public interface Const {
-    public String LOG_TAG = "myhealth-TEST";
-    public String API_URL = "http://henkdieter.com/api/";
+    String LOG_TAG = "myhealth-TEST";
+    String API_URL = "http://henkdieter.com/api/";
 }
