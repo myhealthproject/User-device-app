@@ -12,6 +12,8 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import static com.github.myhealth.Const.LOG_TAG;
+
 
 /**
  * Created by Henk Dieter Oordt on 26-9-2016.
@@ -29,23 +31,25 @@ public abstract class PostRequest extends APIRequest {
 
     @Override
     public String execute(String apiURL, String token) throws IOException {
-        URL url;
         HttpURLConnection connection = null;
         String response = null;
         try {
-            url = new URL(apiURL + path);
-            connection = (HttpURLConnection) url.openConnection();
+            connection = setUpConnection(apiURL, token);
             connection.setDoOutput(true);
             connection.setRequestMethod("POST");
             connection.connect();
 
             DataOutputStream wr = new DataOutputStream(
-                    connection.getOutputStream ());
+                    connection.getOutputStream());
             wr.writeBytes(buildPostData());
+            Log.d(LOG_TAG, "POST REQUEST TO " + connection.getURL().toString() + " DATA: " + buildPostData());
             wr.flush();
-            wr.close ();
+            wr.close();
             InputStream is = connection.getInputStream();
             response = IOUtils.toString(is);
+            Log.d(LOG_TAG, "POST REQUEST TO " + connection.getURL().toString() + " RESPONSE: " + response);
+        } catch (Exception e){
+            Log.d(LOG_TAG, "POST REQUEST TO " + apiURL+path + " EXCEPTION: " + Log.getStackTraceString(e));
         } finally {
             connection.disconnect();
             return response;

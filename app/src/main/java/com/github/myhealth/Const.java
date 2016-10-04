@@ -7,7 +7,7 @@ package com.github.myhealth;
 /**
  * Class used to store global constants. Cannot be instantiated
  */
-public class Const {
+public final class Const {
     public static final String LOG_TAG = "myhealth-TEST";
     public static final String API_URL = "http://henkdieter.com/api/";
     private Const(){}

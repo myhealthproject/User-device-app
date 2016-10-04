@@ -8,4 +8,9 @@ public class DeleteBillResponse extends APIResponse {
     public DeleteBillResponse(String raw) {
         super(raw);
     }
+
+    @Override
+    protected void parseRawResponse(String raw) {
+        success = true;
+    }
 }

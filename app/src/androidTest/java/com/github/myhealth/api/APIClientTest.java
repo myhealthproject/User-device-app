@@ -2,6 +2,9 @@ package com.github.myhealth.api;
 import android.util.Log;
 
 import static com.github.myhealth.Const.LOG_TAG;
+
+import com.github.myhealth.api.request.CreateBillRequest;
+import com.github.myhealth.api.request.GetBillRequest;
 import com.github.myhealth.api.response.AlterBillResponse;
 import com.github.myhealth.api.response.AlterUserResponse;
 import com.github.myhealth.api.response.CreateBillResponse;
@@ -39,8 +42,8 @@ public class APIClientTest {
     private static final String TEST_LAST_NAME = "Oordt";
 
     private static final String TEST_USER_ID = "57ecca82549b665082c734a4";
-    private static final int TEST_BILL_ID = 1;
-    private static final Bill.Status TEST_BILL_STATUS = Bill.Status.PAID;
+    private static final String TEST_BILL_ID = "57f3c32164ae271261d85aea";
+    private static final String TEST_BILL_STATUS = "paid";
     private static final List<Bill.Line> TEST_BILL_LINES = new ArrayList<Bill.Line>();
 
     static {
@@ -53,6 +56,8 @@ public class APIClientTest {
 
     @BeforeClass
     public static void setUp() {
+        //new CreateBillTestRequest(TEST_USER_ID, TEST_BILL_STATUS, TEST_BILL_LINES).printPostData();
+
         apiClient = APIClient.getInstance();
         try {
 //            apiClient.createUser(TEST_USERNAME, TEST_PASSWORD, TEST_FIRST_NAME, TEST_LAST_NAME);
@@ -135,7 +140,7 @@ public class APIClientTest {
     public void getBill() throws Exception {
         GetBillResponse response = apiClient.getBill(TEST_BILL_ID);
         assertTrue(response.isSuccess());
-        assertEquals(response.getId(), TEST_BILL_ID);
+        assertEquals(response.get().getId(), TEST_BILL_ID);
     }
 
     @Test
@@ -149,26 +154,33 @@ public class APIClientTest {
 
     @Test
     public void createBill() throws Exception {
-        CreateBillResponse response = apiClient.createBill(TEST_USER_ID, TEST_BILL_STATUS, TEST_BILL_LINES);
-        assertTrue(response.isSuccess());
+        try {
+            CreateBillResponse response = apiClient.createBill(TEST_USER_ID, TEST_BILL_STATUS, TEST_BILL_LINES);
+            assertTrue(response.isSuccess());
+            GetBillResponse checkResponse = apiClient.getBill(response.getBillId());
+            assertTrue(checkResponse.isSuccess());
+        } catch (IOException e){
+            Log.d(LOG_TAG, "CREATE BILL IOEXCEPTION: " + e.getMessage());
+        }
     }
 
     @Test
     public void alterBill() throws Exception {
-        AlterBillResponse response = apiClient.alterBill(TEST_BILL_ID, TEST_USER_ID, Bill.Status.UNPAID, TEST_BILL_LINES);
+        AlterBillResponse response = apiClient.alterBill(TEST_BILL_ID, TEST_USER_ID, "unpaid", TEST_BILL_LINES);
         assertTrue(response.isSuccess());
         GetBillResponse checkResponse = apiClient.getBill(TEST_BILL_ID);
-        assertEquals(checkResponse.getStatus(), Bill.Status.UNPAID.value);
+        assertEquals(checkResponse.get().getStatus(), "unpaid");
         apiClient.alterBill(TEST_BILL_ID, TEST_USER_ID, TEST_BILL_STATUS, TEST_BILL_LINES);
     }
 
-    @Test
+    @Test(expected = FileNotFoundException.class)
     public void deleteBill() throws Exception {
-        DeleteBillResponse response = apiClient.deleteBill(TEST_BILL_ID);
+        String billId = apiClient.createBill(TEST_USER_ID, TEST_BILL_STATUS, TEST_BILL_LINES).getBillId();
+        DeleteBillResponse response = apiClient.deleteBill(billId);
         assertTrue(response.isSuccess());
-        GetBillResponse checkResponse = apiClient.getBill(TEST_BILL_ID);
+        GetBillResponse checkResponse = apiClient.getBill(billId);
         assertFalse(checkResponse.isSuccess());
-        apiClient.createBill(TEST_USER_ID, TEST_BILL_STATUS, TEST_BILL_LINES);
+
     }
 
     private String randomString(int lenght){
@@ -180,5 +192,18 @@ public class APIClientTest {
             sb.append(c);
         }
         return sb.toString();
+    }
+
+    static class CreateBillTestRequest extends CreateBillRequest {
+
+
+        public CreateBillTestRequest(String userId, String status, List<Bill.Line> lines) {
+            super(userId, status, lines);
+        }
+
+        public void printPostData(){
+            System.out.println(this.buildPostData());
+            Log.d(LOG_TAG, buildPostData());
+        }
     }
 }

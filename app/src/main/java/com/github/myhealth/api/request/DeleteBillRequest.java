@@ -9,7 +9,7 @@ import android.content.Context;
  */
 
 public class DeleteBillRequest extends DeleteRequest {
-    public DeleteBillRequest(int billId) {
+    public DeleteBillRequest(String billId) {
         super("bill/" + billId);
     }
 }

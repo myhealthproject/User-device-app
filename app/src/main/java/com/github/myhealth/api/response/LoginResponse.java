@@ -9,7 +9,7 @@ import org.json.JSONObject;
 
 public class LoginResponse extends APIResponse {
     private String token;
-    private String userId ;
+    private String userId, username, password, firstName, lastName;
     public LoginResponse(String raw) {
         super(raw);
     }
@@ -28,8 +28,12 @@ public class LoginResponse extends APIResponse {
             JSONObject json = new JSONObject(raw);
             token = json.getString("key");
             success = json.getBoolean("success");
-            //userId = json.getString("userid");
-            userId = "57eccbbb549b665082c734a9";
+            JSONObject user = json.getJSONObject("user");
+            userId = user.getString("_id");
+            username = user.getString("uname");
+            password = user.getString("password");
+            firstName = user.getString("fname");
+            lastName = user.getString("lname");
         } catch (JSONException e) {
             success = false;
         }

@@ -6,6 +6,8 @@ import android.util.Log;
 
 import com.github.myhealth.api.Bill;
 
+import org.json.JSONObject;
+
 import java.util.List;
 
 import static com.github.myhealth.Const.LOG_TAG;
@@ -16,10 +18,10 @@ import static com.github.myhealth.Const.LOG_TAG;
 
 public class CreateBillRequest extends PostRequest {
     private final String userId;
-    private final Bill.Status status;
+    private final String status;
     private final List<Bill.Line> lines;
 
-    public CreateBillRequest(String userId, Bill.Status status, List<Bill.Line> lines) {
+    public CreateBillRequest(String userId, String status, List<Bill.Line> lines) {
         super("bill/");
         this.userId = userId;
         this.status = status;
@@ -28,12 +30,13 @@ public class CreateBillRequest extends PostRequest {
 
     @Override
     protected String buildPostData() {
-        StringBuilder builder = new StringBuilder("userid="+userId+"&status="+status.value);
+        StringBuilder builder = new StringBuilder("userid="+userId+"&status="+status);
         int count = 0;
+        JSONObject jsonBuilder = new JSONObject();
         for(Bill.Line line : lines){
-            builder.append("&line["+count+"][description]="+line.description);
-            builder.append("&line["+ count + "][code]="+line.code);
-            builder.append("&line["+ count++ + "][price]="+line.price);
+            builder.append("&line[]={\"description\":\""+line.description+ "\",");
+            builder.append("\"code\":\""+ line.code + "\",");
+            builder.append("\"price\":\"" + line.price + "\"}");
         }
         Log.d(LOG_TAG, builder.toString());
         return builder.toString();

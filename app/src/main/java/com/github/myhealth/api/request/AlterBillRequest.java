@@ -13,10 +13,10 @@ import java.util.List;
 
 public class AlterBillRequest extends PostRequest {
     private final String userId;
-    private final Bill.Status status;
+    private final String status;
     private final List<Bill.Line> lines;
 
-    public AlterBillRequest(int billId, String userId, Bill.Status status, List<Bill.Line> lines) {
+    public AlterBillRequest(String billId, String userId, String status, List<Bill.Line> lines) {
         super("bill/"+billId);
         this.userId = userId;
         this.status = status;

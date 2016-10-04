@@ -24,8 +24,7 @@ public class GetRequest extends APIRequest {
 
     @Override
     public String execute(String apiURL, String token) throws IOException {
-        URL url = new URL(apiURL + path);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        HttpURLConnection connection = setUpConnection(apiURL, token);
         InputStream in = new BufferedInputStream(connection.getInputStream());
         String result = IOUtils.toString(in, "UTF-8");
         return result;

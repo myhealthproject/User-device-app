@@ -144,7 +144,7 @@ public class APIClient {
      * @return
      * @throws IllegalStateException, InvalidRequestException
      */
-    public GetBillResponse getBill(int billId) throws IllegalStateException, IOException {
+    public GetBillResponse getBill(String billId) throws IllegalStateException, IOException {
         return new GetBillResponse(executeRequest(new GetBillRequest(billId)));
     }
 
@@ -166,7 +166,7 @@ public class APIClient {
      * @param lines
      * @return
      */
-    public CreateBillResponse createBill(String userId, Bill.Status status, List<Bill.Line> lines) throws IllegalStateException, InvalidRequestException, IOException {
+    public CreateBillResponse createBill(String userId, String status, List<Bill.Line> lines) throws IllegalStateException, InvalidRequestException, IOException {
         if (lines == null) throw new InvalidRequestException("lines == null");
         if (lines.size() == 0) throw new InvalidRequestException("No lines given");
         return new CreateBillResponse(executeRequest(new CreateBillRequest(userId, status, lines)));
@@ -182,7 +182,7 @@ public class APIClient {
      * @return
      * @throws IllegalStateException, InvalidRequestException
      */
-    public AlterBillResponse alterBill(int billId, String userId, Bill.Status status, List<Bill.Line> lines) throws IllegalStateException, IOException, InvalidRequestException {
+    public AlterBillResponse alterBill(String billId, String userId, String status, List<Bill.Line> lines) throws IllegalStateException, IOException, InvalidRequestException {
         if (lines == null) throw new InvalidRequestException("lines == null");
         if (lines.size() == 0) throw new InvalidRequestException("No lines given");
         return new AlterBillResponse(executeRequest(new AlterBillRequest(billId, userId, status, lines)));
@@ -194,7 +194,7 @@ public class APIClient {
      * @param billId
      * @return
      */
-    public DeleteBillResponse deleteBill(int billId) throws IllegalStateException, IOException {
+    public DeleteBillResponse deleteBill(String billId) throws IllegalStateException, IOException {
         return new DeleteBillResponse(executeRequest(new DeleteBillRequest(billId)));
     }
 
