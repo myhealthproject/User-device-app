@@ -3,6 +3,7 @@ package com.github.myhealth.api;
 import android.content.Context;
 import android.util.Log;
 
+import com.github.myhealth.Const;
 import com.github.myhealth.api.response.AlterBillResponse;
 import com.github.myhealth.api.response.AlterUserResponse;
 import com.github.myhealth.api.response.CreateBillResponse;
@@ -19,6 +20,7 @@ import org.mockito.Mockito;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,13 +33,13 @@ public class APIClientTest {
     private static final String URL = "http://henkdieter.com/api/";
     private static APIClient apiClient;
 
-    private static final String TEST_USERNAME = "test";
-    private static final String TEST_PASSWORD = "password";
+    private static final String TEST_USERNAME = "henk";
+    private static final String TEST_PASSWORD = "Wachtwoord";
 
     private static final String TEST_FIRST_NAME = "test";
     private static final String TEST_LAST_NAME = "test";
 
-    private static final String TEST_USER_ID = "57ea6d74549b665082c7345e";
+    private static final String TEST_USER_ID = "57ecca82549b665082c734a4";
     private static final int TEST_BILL_ID = 1;
     private static final String TEST_BILL_STATUS = "paid";
     private static final List<Bill.Line> TEST_BILL_LINES = new ArrayList<Bill.Line>();
@@ -50,11 +52,19 @@ public class APIClientTest {
         }
     }
 
-    private static String token;
-
     @BeforeClass
-    public static void setUp(){
+    public static void setUp() {
         apiClient = TestAPIClient.getInstance(URL);
+        try {
+//            apiClient.createUser(TEST_USERNAME, TEST_PASSWORD, TEST_FIRST_NAME, TEST_LAST_NAME);
+            apiClient.logIn(TEST_USERNAME, TEST_PASSWORD);
+        } catch (InvalidRequestException e) {
+            Log.d(Const.LOG_TAG, "InvalidRequestException: " +  e.getMessage());
+            e.printStackTrace();
+        } catch (IOException e) {
+            Log.d(Const.LOG_TAG, "IOException: " +  e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -67,7 +77,7 @@ public class APIClientTest {
         LoginResponse response = apiClient.logIn(TEST_USERNAME, TEST_PASSWORD);
         assertTrue(response.isSuccess());
         assertFalse(response.getToken().isEmpty());
-        token = response.getToken();
+        assertFalse(response.getUserId().isEmpty());
     }
 
     @Test
@@ -83,7 +93,7 @@ public class APIClientTest {
         assertTrue(response.isSuccess());
         assertFalse(response.getFirstName().isEmpty());
         assertFalse(response.getLastName().isEmpty());
-        assertNotEquals(null, response.getId());
+        assertNotEquals(null, response.getUserId());
 
         assertEquals(response.getFirstName(), TEST_FIRST_NAME);
         assertEquals(response.getLastName(), TEST_LAST_NAME);
@@ -94,7 +104,7 @@ public class APIClientTest {
         AlterUserResponse response = apiClient.alterUser(TEST_USER_ID, TEST_USERNAME, TEST_PASSWORD, "John", "Doe");
         assertTrue(response.isSuccess());
         GetUserResponse checkResponse = apiClient.getUser(TEST_USER_ID);
-        assertEquals(checkResponse.getId(), TEST_USER_ID);
+        assertEquals(checkResponse.getUserId(), TEST_USER_ID);
         assertEquals(checkResponse.getFirstName(), "John");
         assertEquals(checkResponse.getLastName(), "Doe");
         apiClient.alterUser(TEST_USER_ID, TEST_USERNAME, TEST_PASSWORD, TEST_FIRST_NAME, TEST_LAST_NAME);

@@ -28,7 +28,7 @@ public abstract class PostRequest extends APIRequest {
     protected abstract String buildPostData();
 
     @Override
-    public String execute(String apiURL) throws IOException {
+    public String execute(String apiURL, String token) throws IOException {
         URL url;
         HttpURLConnection connection = null;
         String response = null;

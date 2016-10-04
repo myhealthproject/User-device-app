@@ -13,7 +13,7 @@ import org.json.JSONObject;
 
 public class LoginResponse extends APIResponse {
     private String token;
-    private String userId = "57ec159a549b665082c73484";
+    private String userId ;
     public LoginResponse(String raw) {
         super(raw);
     }
@@ -32,6 +32,7 @@ public class LoginResponse extends APIResponse {
             JSONObject json = new JSONObject(raw);
             token = json.getString("key");
             success = json.getBoolean("success");
+            userId = json.getString("userid");
         } catch (JSONException e) {
             success = false;
         }

@@ -20,5 +20,5 @@ public abstract class APIRequest {
      * Opens the connection, sends the request and returns the raw response
      * @return
      */
-    public abstract String execute(String apiURL) throws IOException;
+    public abstract String execute(String apiURL, String token) throws IOException;
 }

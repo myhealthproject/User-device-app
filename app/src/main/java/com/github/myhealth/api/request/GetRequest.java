@@ -23,11 +23,10 @@ public class GetRequest extends APIRequest {
     }
 
     @Override
-    public String execute(String apiURL) throws IOException {
-        InputStream in;
+    public String execute(String apiURL, String token) throws IOException {
         URL url = new URL(apiURL + path);
-        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-        in = new BufferedInputStream(urlConnection.getInputStream());
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        InputStream in = new BufferedInputStream(connection.getInputStream());
         String result = IOUtils.toString(in, "UTF-8");
         Log.d(Const.LOG_TAG, result);
         return result;
