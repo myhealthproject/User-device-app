@@ -82,7 +82,7 @@ public class APIClientTest {
 
     @Test
     public void createUser() throws Exception {
-        CreateUserResponse response = apiClient.createUser("henk", "Wachtwoord", "Henk Dieter", "Oordt");
+        CreateUserResponse response = apiClient.createUser("meneeraart", "sesamstraat", "aart", "test");
         assertTrue(response.isSuccess());
         //TODO check that user is actually inserted
     }
