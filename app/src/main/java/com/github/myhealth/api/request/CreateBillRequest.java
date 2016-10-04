@@ -32,7 +32,6 @@ public class CreateBillRequest extends PostRequest {
     protected String buildPostData() {
         StringBuilder builder = new StringBuilder("userid="+userId+"&status="+status);
         builder.append(Bill.Line.toEncodedString(lines));
-        Log.d(LOG_TAG, builder.toString());
         return builder.toString();
     }
 }
