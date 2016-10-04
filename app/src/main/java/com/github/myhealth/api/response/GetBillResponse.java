@@ -9,7 +9,7 @@ import java.text.ParseException;
  */
 public class GetBillResponse extends APIResponse {
     private String id, userId;
-    private String status;
+    private Bill.Status status;
     private String[][] lines;
 
     public GetBillResponse(String raw) {
@@ -33,7 +33,7 @@ public class GetBillResponse extends APIResponse {
         return userId;
     }
 
-    public String getStatus() {
+    public Bill.Status getStatus() {
         return status;
     }
 

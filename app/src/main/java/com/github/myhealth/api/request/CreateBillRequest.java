@@ -31,9 +31,9 @@ public class CreateBillRequest extends PostRequest {
         StringBuilder builder = new StringBuilder("userid="+userId+"&status="+status.value);
         int count = 0;
         for(Bill.Line line : lines){
-            builder.append("&line["+(++count)+"][description]="+line.description);
+            builder.append("&line["+count+"][description]="+line.description);
             builder.append("&line["+ count + "][code]="+line.code);
-            builder.append("&line["+ count + "][price]="+line.price);
+            builder.append("&line["+ count++ + "][price]="+line.price);
         }
         Log.d(LOG_TAG, builder.toString());
         return builder.toString();
