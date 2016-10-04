@@ -40,7 +40,6 @@ public class GetUserResponse extends APIResponse {
 
     @Override
     protected void parseRawResponse(String raw) {
-        Log.d(LOG_TAG, "GET USER: " + raw);
         try {
             JSONObject json = new JSONObject(raw);
             userId = json.getString("_id");

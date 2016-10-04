@@ -39,7 +39,6 @@ public class CreateUserResponse extends APIResponse {
 
     @Override
     protected void parseRawResponse(String raw) {
-        Log.d(LOG_TAG, "CREATE USER: " + raw);
         try {
             JSONObject json = new JSONObject(raw);
             username = json.getString("uname");

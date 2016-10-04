@@ -15,7 +15,6 @@ public class DeleteUserResponse extends APIResponse {
 
     @Override
     protected void parseRawResponse(String raw) {
-        Log.d(LOG_TAG, "DELETE USER: " + raw);
-        success = true;
+        success = raw != null;
     }
 }

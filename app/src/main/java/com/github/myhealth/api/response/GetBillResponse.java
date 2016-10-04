@@ -35,7 +35,7 @@ public class GetBillResponse extends APIResponse {
         return bill.getStatus();
     }
 
-    public Bill toBoll(){
+    public Bill toBill(){
         return bill;
     }
 

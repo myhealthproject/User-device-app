@@ -14,7 +14,6 @@ public class AlterUserResponse extends APIResponse {
 
     @Override
     protected void parseRawResponse(String raw) {
-        Log.d(LOG_TAG, "ALTER USER: " + raw);
-        success = true;
+        success = raw != null;
     }
 }

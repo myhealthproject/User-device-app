@@ -56,7 +56,6 @@ public class APIClientTest {
 
     @BeforeClass
     public static void setUp() {
-        //new CreateBillTestRequest(TEST_USER_ID, TEST_BILL_STATUS, TEST_BILL_LINES).printPostData();
 
         apiClient = APIClient.getInstance();
         try {
@@ -192,18 +191,5 @@ public class APIClientTest {
             sb.append(c);
         }
         return sb.toString();
-    }
-
-    static class CreateBillTestRequest extends CreateBillRequest {
-
-
-        public CreateBillTestRequest(String userId, String status, List<Bill.Line> lines) {
-            super(userId, status, lines);
-        }
-
-        public void printPostData(){
-            System.out.println(this.buildPostData());
-            Log.d(LOG_TAG, buildPostData());
-        }
     }
 }
