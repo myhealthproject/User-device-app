@@ -33,6 +33,7 @@ public class LoginResponse extends APIResponse {
             token = json.getString("key");
             success = json.getBoolean("success");
             userId = json.getString("userid");
+            userId = "57eccbbb549b665082c734a9";
         } catch (JSONException e) {
             success = false;
         }

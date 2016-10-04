@@ -334,7 +334,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             if (response.isSuccess()) {
                 finish();
-                Intent intent = new Intent(mContext, MainActivity.class);
+                Intent intent = new Intent(mContext, ProfileActivity.class);
                 intent.putExtra(EXTRA_USER_ID, response.getUserId());
                 startActivity(intent);
             } else {
