@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.ParseException;
+import java.util.List;
 
 import static com.github.myhealth.Const.LOG_TAG;
 
@@ -22,13 +23,28 @@ public class GetBillResponse extends APIResponse {
         super(raw);
     }
 
-    public Bill get() throws ParseException {
+    public String getBillId() {
+        return bill.getId();
+    }
+
+    public String getUserId(){
+        return bill.getUserId();
+    }
+
+    public String getStatus(){
+        return bill.getStatus();
+    }
+
+    public Bill toBoll(){
         return bill;
+    }
+
+    public List<Bill.Line> getLines(){
+        return bill.getLines();
     }
 
     @Override
     protected void parseRawResponse(String raw) {
-        Log.d(LOG_TAG, "GET BILL: " + raw);
         try {
             JSONObject json = new JSONObject(raw);
             String billId = json.getString("_id");

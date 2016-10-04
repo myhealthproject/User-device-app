@@ -140,7 +140,7 @@ public class APIClientTest {
     public void getBill() throws Exception {
         GetBillResponse response = apiClient.getBill(TEST_BILL_ID);
         assertTrue(response.isSuccess());
-        assertEquals(response.get().getId(), TEST_BILL_ID);
+        assertEquals(response.getBillId(), TEST_BILL_ID);
     }
 
     @Test
@@ -169,7 +169,7 @@ public class APIClientTest {
         AlterBillResponse response = apiClient.alterBill(TEST_BILL_ID, TEST_USER_ID, "unpaid", TEST_BILL_LINES);
         assertTrue(response.isSuccess());
         GetBillResponse checkResponse = apiClient.getBill(TEST_BILL_ID);
-        assertEquals(checkResponse.get().getStatus(), "unpaid");
+        assertEquals(checkResponse.getStatus(), "unpaid");
         apiClient.alterBill(TEST_BILL_ID, TEST_USER_ID, TEST_BILL_STATUS, TEST_BILL_LINES);
     }
 

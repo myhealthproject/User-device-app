@@ -1,5 +1,8 @@
 package com.github.myhealth.api;
 
+import android.util.Log;
+import android.util.StringBuilderPrinter;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -8,12 +11,14 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.github.myhealth.Const.LOG_TAG;
+
 /**
  * Created by Henk Dieter Oordt on 27-9-2016.
  */
 
 public class Bill {
-    public String id;
+    private String id;
     private String userId;
     private String status;
     private List<Line> lines;
@@ -59,6 +64,16 @@ public class Bill {
     public static class Line {
         public final String description, code;
         public final double price;
+
+        public static String toEncodedString(List<Bill.Line> lines){
+            StringBuilder builder = new StringBuilder();
+            for(Bill.Line line : lines){
+                builder.append("&line[]={\"description\":\""+line.description+ "\",");
+                builder.append("\"code\":\""+ line.code + "\",");
+                builder.append("\"price\":\"" + line.price + "\"}");
+            }
+            return builder.toString();
+        }
 
         public Line(String description, String code, double price){
             this.description = description;

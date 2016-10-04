@@ -25,6 +25,8 @@ public class AlterBillRequest extends PostRequest {
 
     @Override
     protected String buildPostData() {
-        return null;
+        StringBuilder builder = new StringBuilder("userid="+userId+"&status="+status);
+        builder.append(Bill.Line.toEncodedString(lines));
+        return builder.toString();
     }
 }

@@ -31,13 +31,7 @@ public class CreateBillRequest extends PostRequest {
     @Override
     protected String buildPostData() {
         StringBuilder builder = new StringBuilder("userid="+userId+"&status="+status);
-        int count = 0;
-        JSONObject jsonBuilder = new JSONObject();
-        for(Bill.Line line : lines){
-            builder.append("&line[]={\"description\":\""+line.description+ "\",");
-            builder.append("\"code\":\""+ line.code + "\",");
-            builder.append("\"price\":\"" + line.price + "\"}");
-        }
+        builder.append(Bill.Line.toEncodedString(lines));
         Log.d(LOG_TAG, builder.toString());
         return builder.toString();
     }
