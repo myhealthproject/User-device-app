@@ -4,7 +4,7 @@ package com.github.myhealth.api;
  * Created by Henk Dieter Oordt on 26-9-2016.
  */
 
-import com.github.myhealth.Const;
+import static com.github.myhealth.Const.API_URL;
 import com.github.myhealth.api.request.AlterBillRequest;
 import com.github.myhealth.api.request.AlterUserRequest;
 import com.github.myhealth.api.request.CreateBillRequest;
@@ -58,13 +58,12 @@ public class APIClient {
             synchronized (APIClient.class) {
                 if (instance == null) {
                     //The default API url is extracted from a string resource, so that it can be accessed easily
-                    instance = new APIClient(Const.API_URL);
+                    instance = new APIClient(API_URL);
                 }
             }
         }
         return instance;
     }
-
 
     /**
      * Creates a new API call, executes and parses its response, after which it returns the response
@@ -75,7 +74,7 @@ public class APIClient {
      * @return The parsed response
      * @throws IllegalStateException, InvalidRequestException
      */
-    public LoginResponse logIn(String email, String password) throws InvalidRequestException, IOException {
+    public synchronized LoginResponse logIn(String email, String password) throws InvalidRequestException, IOException {
         if (email.isEmpty()) throw new InvalidRequestException("No email given");
         if (password.isEmpty()) throw new InvalidRequestException("No password given");
         LoginResponse response = new LoginResponse(new LoginRequest(email, password).execute(apiURL, token));
@@ -167,8 +166,7 @@ public class APIClient {
      * @param lines
      * @return
      */
-    public CreateBillResponse createBill(String userId, String status, List<Bill.Line> lines) throws IllegalStateException, InvalidRequestException, IOException {
-        if (status.isEmpty()) throw new InvalidRequestException("No status given");
+    public CreateBillResponse createBill(String userId, Bill.Status status, List<Bill.Line> lines) throws IllegalStateException, InvalidRequestException, IOException {
         if (lines == null) throw new InvalidRequestException("lines == null");
         if (lines.size() == 0) throw new InvalidRequestException("No lines given");
         return new CreateBillResponse(executeRequest(new CreateBillRequest(userId, status, lines)));
@@ -184,8 +182,7 @@ public class APIClient {
      * @return
      * @throws IllegalStateException, InvalidRequestException
      */
-    public AlterBillResponse alterBill(int billId, String userId, String status, List<Bill.Line> lines) throws IllegalStateException, IOException, InvalidRequestException {
-        if (status.isEmpty()) throw new InvalidRequestException("No status given");
+    public AlterBillResponse alterBill(int billId, String userId, Bill.Status status, List<Bill.Line> lines) throws IllegalStateException, IOException, InvalidRequestException {
         if (lines == null) throw new InvalidRequestException("lines == null");
         if (lines.size() == 0) throw new InvalidRequestException("No lines given");
         return new AlterBillResponse(executeRequest(new AlterBillRequest(billId, userId, status, lines)));
@@ -206,7 +203,7 @@ public class APIClient {
      *
      * @param request
      */
-    private String executeRequest(APIRequest request) throws IllegalStateException, IOException {
+    private synchronized String executeRequest(APIRequest request) throws IllegalStateException, IOException {
         if (token == null) throw new IllegalStateException("Please log in first");
         return request.execute(apiURL, token);
     }

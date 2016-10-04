@@ -1,9 +1,5 @@
 package com.github.myhealth.api.response;
 
-import android.util.Log;
-
-import com.github.myhealth.Const;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -32,7 +28,7 @@ public class LoginResponse extends APIResponse {
             JSONObject json = new JSONObject(raw);
             token = json.getString("key");
             success = json.getBoolean("success");
-            userId = json.getString("userid");
+            //userId = json.getString("userid");
             userId = "57eccbbb549b665082c734a9";
         } catch (JSONException e) {
             success = false;

@@ -1,5 +1,9 @@
 package com.github.myhealth.api.response;
 
+import android.util.Log;
+
+import static com.github.myhealth.Const.LOG_TAG;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -36,6 +40,7 @@ public class GetUserResponse extends APIResponse {
 
     @Override
     protected void parseRawResponse(String raw) {
+        Log.d(LOG_TAG, "GET USER: " + raw);
         try {
             JSONObject json = new JSONObject(raw);
             userId = json.getString("_id");

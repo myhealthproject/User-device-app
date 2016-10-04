@@ -1,9 +1,7 @@
 package com.github.myhealth.api;
-
-import android.content.Context;
 import android.util.Log;
 
-import com.github.myhealth.Const;
+import static com.github.myhealth.Const.LOG_TAG;
 import com.github.myhealth.api.response.AlterBillResponse;
 import com.github.myhealth.api.response.AlterUserResponse;
 import com.github.myhealth.api.response.CreateBillResponse;
@@ -15,14 +13,15 @@ import com.github.myhealth.api.response.GetUserResponse;
 import com.github.myhealth.api.response.LoginResponse;
 import com.github.myhealth.api.response.CreateUserResponse;
 
-import org.mockito.Mockito;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import static org.junit.Assert.*;
 
@@ -36,12 +35,12 @@ public class APIClientTest {
     private static final String TEST_USERNAME = "henk";
     private static final String TEST_PASSWORD = "Wachtwoord";
 
-    private static final String TEST_FIRST_NAME = "test";
-    private static final String TEST_LAST_NAME = "test";
+    private static final String TEST_FIRST_NAME = "Henk Dieter";
+    private static final String TEST_LAST_NAME = "Oordt";
 
     private static final String TEST_USER_ID = "57ecca82549b665082c734a4";
     private static final int TEST_BILL_ID = 1;
-    private static final String TEST_BILL_STATUS = "paid";
+    private static final Bill.Status TEST_BILL_STATUS = Bill.Status.PAID;
     private static final List<Bill.Line> TEST_BILL_LINES = new ArrayList<Bill.Line>();
 
     static {
@@ -54,22 +53,22 @@ public class APIClientTest {
 
     @BeforeClass
     public static void setUp() {
-        apiClient = TestAPIClient.getInstance(URL);
+        apiClient = APIClient.getInstance();
         try {
 //            apiClient.createUser(TEST_USERNAME, TEST_PASSWORD, TEST_FIRST_NAME, TEST_LAST_NAME);
             apiClient.logIn(TEST_USERNAME, TEST_PASSWORD);
         } catch (InvalidRequestException e) {
-            Log.d(Const.LOG_TAG, "InvalidRequestException: " +  e.getMessage());
+            Log.d(LOG_TAG, "InvalidRequestException: " +  e.getMessage());
             e.printStackTrace();
         } catch (IOException e) {
-            Log.d(Const.LOG_TAG, "IOException: " +  e.getMessage());
+            Log.d(LOG_TAG, "IOException: " +  e.getMessage());
             e.printStackTrace();
         }
     }
 
     @Test
     public void getInstance() throws Exception {
-        assertTrue(TestAPIClient.getInstance(URL) == TestAPIClient.getInstance(URL));
+        assertTrue(APIClient.getInstance() == APIClient.getInstance());
     }
 
     @Test
@@ -82,9 +81,19 @@ public class APIClientTest {
 
     @Test
     public void createUser() throws Exception {
-        CreateUserResponse response = apiClient.createUser("meneeraart", "sesamstraat", "aart", "test");
+        String mockUname = randomString(10);
+        String mockFname = randomString(10);
+        String mockLname = randomString(10);
+        String mockPassword = "pass";
+        CreateUserResponse response = apiClient.createUser(mockUname, mockPassword, mockFname, mockLname);
         assertTrue(response.isSuccess());
-        //TODO check that user is actually inserted
+        GetUserResponse checkResponse = apiClient.getUser(response.getUserId());
+        assertTrue(response.isSuccess());
+        assertEquals(response.getUsername(), checkResponse.getUsername());
+        assertEquals(response.getPassword(), checkResponse.getPassword());
+        assertEquals(response.getFirstName(), checkResponse.getFirstName());
+        assertEquals(response.getLastName(), checkResponse.getLastName());
+
     }
 
     @Test
@@ -94,7 +103,6 @@ public class APIClientTest {
         assertFalse(response.getFirstName().isEmpty());
         assertFalse(response.getLastName().isEmpty());
         assertNotEquals(null, response.getUserId());
-
         assertEquals(response.getFirstName(), TEST_FIRST_NAME);
         assertEquals(response.getLastName(), TEST_LAST_NAME);
     }
@@ -110,12 +118,17 @@ public class APIClientTest {
         apiClient.alterUser(TEST_USER_ID, TEST_USERNAME, TEST_PASSWORD, TEST_FIRST_NAME, TEST_LAST_NAME);
     }
 
-    @Test
+    @Test(expected = FileNotFoundException.class)
     public void deleteUser() throws Exception {
-        DeleteUserResponse response = apiClient.deleteUser(TEST_USER_ID);
-        GetUserResponse checkResponse = apiClient.getUser(TEST_USER_ID);
+        String mockUname = randomString(10);
+        String mockFname = randomString(10);
+        String mockLname = randomString(10);
+        String mockPassword = "pass";
+        String mockUserId = apiClient.createUser(mockUname, mockPassword, mockFname, mockLname).getUserId();
+        DeleteUserResponse response = apiClient.deleteUser(mockUserId);
+
+        GetUserResponse checkResponse = apiClient.getUser(mockUserId);
         assertFalse(checkResponse.isSuccess());
-        apiClient.createUser(TEST_USERNAME, TEST_PASSWORD, TEST_FIRST_NAME, TEST_LAST_NAME);
     }
 
     @Test
@@ -138,15 +151,14 @@ public class APIClientTest {
     public void createBill() throws Exception {
         CreateBillResponse response = apiClient.createBill(TEST_USER_ID, TEST_BILL_STATUS, TEST_BILL_LINES);
         assertTrue(response.isSuccess());
-        //TODO check that the bill has actually been created
     }
 
     @Test
     public void alterBill() throws Exception {
-        AlterBillResponse response = apiClient.alterBill(TEST_BILL_ID, TEST_USER_ID, "unpaid", TEST_BILL_LINES);
+        AlterBillResponse response = apiClient.alterBill(TEST_BILL_ID, TEST_USER_ID, Bill.Status.UNPAID, TEST_BILL_LINES);
         assertTrue(response.isSuccess());
         GetBillResponse checkResponse = apiClient.getBill(TEST_BILL_ID);
-        assertEquals(checkResponse.getStatus(), "unpaid");
+        assertEquals(checkResponse.getStatus(), Bill.Status.UNPAID.value);
         apiClient.alterBill(TEST_BILL_ID, TEST_USER_ID, TEST_BILL_STATUS, TEST_BILL_LINES);
     }
 
@@ -159,22 +171,14 @@ public class APIClientTest {
         apiClient.createBill(TEST_USER_ID, TEST_BILL_STATUS, TEST_BILL_LINES);
     }
 
-    private static class TestAPIClient extends APIClient {
-        private  static TestAPIClient instance;
-        protected TestAPIClient(String apiURL) {
-            super(apiURL);
+    private String randomString(int lenght){
+        char[] chars = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+        StringBuilder sb = new StringBuilder();
+        Random random = new Random();
+        for (int i = 0; i < lenght; i++) {
+            char c = chars[random.nextInt(chars.length)];
+            sb.append(c);
         }
-
-        public static TestAPIClient getInstance(String apiURL){
-            if (instance == null) {
-                synchronized (APIClient.class) {
-                    if (instance == null) {
-                        instance = new TestAPIClient(apiURL);
-                    }
-                }
-            }
-            return instance;
-        }
+        return sb.toString();
     }
-
 }

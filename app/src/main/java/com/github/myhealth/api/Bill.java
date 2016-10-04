@@ -11,16 +11,16 @@ import java.util.List;
 public class Bill {
     public String id;
     private String userId;
-    private String status;
+    private Status status;
     private List<Line> lines;
-    public Bill(String id, String userId, String status, String[][] lines) throws NumberFormatException {
+    public Bill(String id, String userId, Status status, String[][] lines) throws NumberFormatException {
         this.id = id;
         this.userId = userId;
         this.status = status;
         this.lines = createLines(lines);
     }
 
-    public Bill(String id, String userId, String status, List<Line> lines){
+    public Bill(String id, String userId, Status status, List<Line> lines){
         this.id = id;
         this.userId = userId;
         this.status = status;
@@ -35,7 +35,7 @@ public class Bill {
         return userId;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
@@ -61,6 +61,20 @@ public class Bill {
             this.description = description;
             this.code = code;
             this.price = price;
+        }
+    }
+
+    /**
+     * Represents the different status a bill can have
+     */
+    public enum Status {
+        PAID("paid"),
+        UNPAID("unpaid");
+
+        public final String value;
+
+        Status(String value){
+            this.value = value;
         }
     }
 }

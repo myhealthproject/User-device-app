@@ -2,7 +2,7 @@ package com.github.myhealth.api.request;
 
 import android.util.Log;
 
-import com.github.myhealth.Const;
+import static com.github.myhealth.Const.LOG_TAG;
 
 import org.apache.commons.io.IOUtils;
 
@@ -23,14 +23,12 @@ public class DeleteRequest extends APIRequest {
 
     @Override
     public String execute(String apiURL, String token) throws IOException {
-        /*URL url = new URL(apiURL + path);
+        URL url = new URL(apiURL + path);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("DELETE");
         connection.connect();
         InputStream in = new BufferedInputStream(connection.getInputStream());
         String result = IOUtils.toString(in, "UTF-8");
-        Log.d(Const.LOG_TAG, result);
-        return result;*/
-        return null;
+        return result;
     }
 }

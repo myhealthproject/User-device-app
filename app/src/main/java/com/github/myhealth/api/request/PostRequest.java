@@ -33,7 +33,6 @@ public abstract class PostRequest extends APIRequest {
         HttpURLConnection connection = null;
         String response = null;
         try {
-            Log.d(Const.LOG_TAG, "POST TO " + apiURL + path);
             url = new URL(apiURL + path);
             connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
@@ -47,7 +46,6 @@ public abstract class PostRequest extends APIRequest {
             wr.close ();
             InputStream is = connection.getInputStream();
             response = IOUtils.toString(is);
-            Log.d(Const.LOG_TAG, "RESPONSE: " + response);
         } finally {
             connection.disconnect();
             return response;

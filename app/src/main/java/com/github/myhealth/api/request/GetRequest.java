@@ -28,7 +28,6 @@ public class GetRequest extends APIRequest {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         InputStream in = new BufferedInputStream(connection.getInputStream());
         String result = IOUtils.toString(in, "UTF-8");
-        Log.d(Const.LOG_TAG, result);
         return result;
     }
 

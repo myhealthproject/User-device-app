@@ -1,7 +1,9 @@
 package com.github.myhealth.api.request;
 
 import android.content.Context;
+import android.util.Log;
 
+import com.github.myhealth.Const;
 
 
 /**
@@ -23,6 +25,6 @@ public class AlterUserRequest extends PostRequest {
 
     @Override
     protected String buildPostData() {
-        return null;
+        return "fname="+firstName+"&lname="+lastName;
     }
 }
