@@ -61,6 +61,25 @@ public class Bill {
         return lineList;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof Bill){
+            Bill bill = (Bill) obj;
+            if(bill.id.equals(this.id))
+                if(bill.userId.equals(this.userId))
+                    if(bill.status.equals(this.status)){
+                        if(bill.lines.size() == this.lines.size()){
+                            for(int i = 0; i < this.lines.size(); i++){
+                                if(!bill.lines.get(i).equals(this.lines.get(i)))
+                                    return false;
+                            }
+                            return true;
+                        }
+                    }
+        }
+        return false;
+    }
+
     public static class Line {
         public final String description, code;
         public final double price;
@@ -79,6 +98,19 @@ public class Bill {
             this.description = description;
             this.code = code;
             this.price = price;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if(obj instanceof Line){
+                Line line = (Line) obj;
+                if(line.price == this.price)
+                    if(line.code.equals(this.code))
+                        if(line.description.equals(this.description))
+                            Log.d(LOG_TAG, "LINE EQUALS OTHER LINE!");
+                            return true;
+            }
+            return false;
         }
     }
 }

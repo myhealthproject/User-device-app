@@ -46,17 +46,9 @@ public class APIClientTest {
     private static final String TEST_BILL_STATUS = "paid";
     private static final List<Bill.Line> TEST_BILL_LINES = new ArrayList<Bill.Line>();
 
-    static {
-        try {
-            TEST_BILL_LINES.add(new Bill.Line("test description", "TESTCODE", 12.3));
-        } catch (Exception e){
-            e.getMessage();
-        }
-    }
-
     @BeforeClass
     public static void setUp() {
-
+        TEST_BILL_LINES.add(new Bill.Line("test description", "TESTCODE", 12.3));
         apiClient = APIClient.getInstance();
         try {
 //            apiClient.createUser(TEST_USERNAME, TEST_PASSWORD, TEST_FIRST_NAME, TEST_LAST_NAME);
@@ -158,6 +150,11 @@ public class APIClientTest {
             assertTrue(response.isSuccess());
             GetBillResponse checkResponse = apiClient.getBill(response.getBillId());
             assertTrue(checkResponse.isSuccess());
+            assertEquals(checkResponse.toBill(), response.toBill());
+            assertEquals(TEST_BILL_LINES.size(), response.toBill().getLines().size());
+            for(int i = 0; i < TEST_BILL_LINES.size(); i++){
+                assertEquals(TEST_BILL_LINES.get(i), response.toBill().getLines().get(i));
+            }
         } catch (IOException e){
             Log.d(LOG_TAG, "CREATE BILL IOEXCEPTION: " + e.getMessage());
         }
