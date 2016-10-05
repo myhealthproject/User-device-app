@@ -7,6 +7,6 @@ package com.github.myhealth.api.request;
 
 public class GetBillsByUserIdRequest extends GetRequest {
     public GetBillsByUserIdRequest(String userId) {
-        super("billsbyuserid/" + userId);
+        super("getbillsbyuserid/" + userId);
     }
 }

@@ -45,14 +45,14 @@ public abstract class PostRequest extends APIRequest {
             DataOutputStream wr = new DataOutputStream(
                     connection.getOutputStream());
             wr.writeBytes(buildPostData().toString());
-            Log.d(LOG_TAG, "POST REQUEST TO " + connection.getURL().toString() + " DATA: " + buildPostData());
+            //Log.d(LOG_TAG, "POST REQUEST TO " + connection.getURL().toString() + " DATA: " + buildPostData());
             wr.flush();
             wr.close();
             InputStream is = connection.getInputStream();
             response = IOUtils.toString(is);
-            Log.d(LOG_TAG, "POST REQUEST TO " + connection.getURL().toString() + " RESPONSE: " + response);
+            //Log.d(LOG_TAG, "POST REQUEST TO " + connection.getURL().toString() + " RESPONSE: " + response);
         } catch (Exception e){
-            Log.d(LOG_TAG, "POST REQUEST TO " + apiURL+path + " EXCEPTION: " + Log.getStackTraceString(e));
+            //Log.d(LOG_TAG, "POST REQUEST TO " + apiURL+path + " EXCEPTION: " + Log.getStackTraceString(e));
         } finally {
             connection.disconnect();
             return response;

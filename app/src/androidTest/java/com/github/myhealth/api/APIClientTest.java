@@ -156,7 +156,7 @@ public class APIClientTest {
                 assertEquals(TEST_BILL_LINES.get(i), response.toBill().getLines().get(i));
             }
         } catch (IOException e){
-            Log.d(LOG_TAG, "CREATE BILL IOEXCEPTION:  " + e.getMessage());
+            Log.d(LOG_TAG, "CREATE BILL IOEXCEPTION: " + e.getMessage());
         }
     }
 
