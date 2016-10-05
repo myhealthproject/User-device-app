@@ -1,7 +1,5 @@
 package com.github.myhealth.api.response;
 
-import android.util.Log;
-
 import com.github.myhealth.api.Bill;
 
 import org.json.JSONArray;
@@ -9,8 +7,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
-
-import static com.github.myhealth.Const.LOG_TAG;
 
 /**
  * Created by Henk Dieter Oordt on 27-9-2016.

@@ -5,6 +5,8 @@ import android.util.Log;
 import com.github.myhealth.Const;
 
 import org.apache.commons.io.IOUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -27,7 +29,7 @@ public abstract class PostRequest extends APIRequest {
      * Builds post data
      * @return
      */
-    protected abstract String buildPostData();
+    protected abstract JSONObject buildPostData() throws JSONException;
 
     @Override
     public String execute(String apiURL, String token) throws IOException {
@@ -37,11 +39,12 @@ public abstract class PostRequest extends APIRequest {
             connection = setUpConnection(apiURL, token);
             connection.setDoOutput(true);
             connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json");
             connection.connect();
 
             DataOutputStream wr = new DataOutputStream(
                     connection.getOutputStream());
-            wr.writeBytes(buildPostData());
+            wr.writeBytes(buildPostData().toString());
             Log.d(LOG_TAG, "POST REQUEST TO " + connection.getURL().toString() + " DATA: " + buildPostData());
             wr.flush();
             wr.close();

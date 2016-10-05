@@ -5,6 +5,8 @@ import android.content.Context;
 
 import com.github.myhealth.api.Bill;
 
+import org.json.JSONObject;
+
 import java.util.List;
 
 /**
@@ -24,9 +26,7 @@ public class AlterBillRequest extends PostRequest {
     }
 
     @Override
-    protected String buildPostData() {
-        StringBuilder builder = new StringBuilder("userid="+userId+"&status="+status);
-        builder.append(Bill.Line.toEncodedString(lines));
-        return builder.toString();
+    protected JSONObject buildPostData() {
+        return null;
     }
 }

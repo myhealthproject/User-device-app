@@ -84,14 +84,21 @@ public class Bill {
         public final String description, code;
         public final double price;
 
-        public static String toEncodedString(List<Bill.Line> lines){
-            StringBuilder builder = new StringBuilder();
+        public static JSONArray toJsonArray(List<Bill.Line> lines){
+            JSONArray jsonArray = new JSONArray();
             for(Bill.Line line : lines){
-                builder.append("&line[]={\"description\":\""+line.description+ "\",");
-                builder.append("\"code\":\""+ line.code + "\",");
-                builder.append("\"price\":\"" + line.price + "\"}");
+                try {
+                    JSONObject jsonObject = new JSONObject()
+                            .accumulate("description", line.description)
+                            .accumulate("code", line.code)
+                            .accumulate("price", line.price);
+                    jsonArray.put(jsonObject);
+                } catch (JSONException e) {
+                    Log.d(LOG_TAG, e.getMessage());
+                }
+
             }
-            return builder.toString();
+            return jsonArray;
         }
 
         public Line(String description, String code, double price){

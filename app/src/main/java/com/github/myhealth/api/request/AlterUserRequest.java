@@ -5,6 +5,11 @@ import android.util.Log;
 
 import com.github.myhealth.Const;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import static com.github.myhealth.Const.LOG_TAG;
+
 
 /**
  * Created by Henk Dieter Oordt on 27-9-2016.
@@ -24,7 +29,8 @@ public class AlterUserRequest extends PostRequest {
     }
 
     @Override
-    protected String buildPostData() {
-        return "fname="+firstName+"&lname="+lastName;
+    protected JSONObject buildPostData() throws JSONException {
+            return new JSONObject().accumulate("fname", firstName).accumulate("lname", lastName);
+
     }
 }

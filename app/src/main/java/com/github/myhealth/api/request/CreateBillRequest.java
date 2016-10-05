@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.github.myhealth.api.Bill;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -29,9 +30,10 @@ public class CreateBillRequest extends PostRequest {
     }
 
     @Override
-    protected String buildPostData() {
-        StringBuilder builder = new StringBuilder("userid="+userId+"&status="+status);
-        builder.append(Bill.Line.toEncodedString(lines));
-        return builder.toString();
+    protected JSONObject buildPostData() throws JSONException {
+            return new JSONObject()
+                .accumulate("userid", userId)
+                .accumulate("status", status)
+                .accumulate("lines", Bill.Line.toJsonArray(lines));
     }
 }

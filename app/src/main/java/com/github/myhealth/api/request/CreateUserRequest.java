@@ -1,7 +1,12 @@
 package com.github.myhealth.api.request;
 
 import android.content.Context;
+import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import static com.github.myhealth.Const.LOG_TAG;
 
 
 /**
@@ -19,7 +24,15 @@ public class CreateUserRequest extends PostRequest {
     }
 
     @Override
-    protected String buildPostData() {
-        return "uname="+username+"&password="+password+"&fname="+firstName+"&lname="+lastName;
+    protected JSONObject buildPostData() {
+        try {
+            return new JSONObject().accumulate("uname", username)
+                    .accumulate("password", password)
+                    .accumulate("fname", firstName)
+                    .accumulate("lname", lastName);
+        } catch (JSONException e) {
+            Log.d(LOG_TAG, e.getMessage());
+            return null;
+        }
     }
 }
