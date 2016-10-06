@@ -2,8 +2,6 @@ package com.github.myhealth.api.response;
 
 import android.util.Log;
 
-import com.github.myhealth.Const;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,7 +11,7 @@ import org.json.JSONObject;
 
 public class LoginResponse extends APIResponse {
     private String token;
-    private String userId ;
+    private String userId, username, password, firstName, lastName;
     public LoginResponse(String raw) {
         super(raw);
     }
@@ -32,7 +30,12 @@ public class LoginResponse extends APIResponse {
             JSONObject json = new JSONObject(raw);
             token = json.getString("key");
             success = json.getBoolean("success");
-            userId = json.getJSONObject("user").getString("_id");
+            JSONObject user = json.getJSONObject("user");
+            userId = user.getString("_id");
+            username = user.getString("uname");
+            password = user.getString("password");
+            firstName = user.getString("fname");
+            lastName = user.getString("lname");
         } catch (JSONException e) {
             e.printStackTrace();
             Log.d("parserawresponse", "parseRawResponse: failed to parse response");

@@ -1,43 +1,60 @@
 package com.github.myhealth.api.response;
 
+import android.util.Log;
+
 import com.github.myhealth.api.Bill;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.ParseException;
+import java.util.List;
+
+import static com.github.myhealth.Const.LOG_TAG;
 
 /**
  * Created by Henk Dieter Oordt on 27-9-2016.
  */
 public class GetBillResponse extends APIResponse {
-    private String id, userId;
-    private String status;
-    private String[][] lines;
+    private Bill bill;
 
     public GetBillResponse(String raw) {
         super(raw);
     }
 
-    public Bill toBill() throws ParseException {
-        return new Bill(id, userId, status, lines);
+    public String getBillId() {
+        return bill.getId();
+    }
+
+    public String getUserId(){
+        return bill.getUserId();
+    }
+
+    public String getStatus(){
+        return bill.getStatus();
+    }
+
+    public Bill toBill(){
+        return bill;
+    }
+
+    public List<Bill.Line> getLines(){
+        return bill.getLines();
     }
 
     @Override
     protected void parseRawResponse(String raw) {
-
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getUserID() {
-        return userId;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public String[][] getLines() {
-        return lines;
+        try {
+            JSONObject json = new JSONObject(raw);
+            String billId = json.getString("_id");
+            String userId = json.getString("userid");
+            String status = json.getString("status");
+            JSONArray lines = json.getJSONArray("lines");
+            bill = new Bill(billId,userId,status,lines);
+            success = true;
+        } catch (JSONException e) {
+            success = false;
+        }
     }
 }

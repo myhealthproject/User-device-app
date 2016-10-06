@@ -1,5 +1,9 @@
 package com.github.myhealth.api.response;
 
+import android.util.Log;
+
+import static com.github.myhealth.Const.LOG_TAG;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 

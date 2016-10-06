@@ -9,7 +9,7 @@ import android.content.Context;
  */
 
 public class GetBillRequest extends GetRequest {
-    public GetBillRequest(int billId) {
+    public GetBillRequest(String billId) {
         super("bill/" + billId);
     }
 }
