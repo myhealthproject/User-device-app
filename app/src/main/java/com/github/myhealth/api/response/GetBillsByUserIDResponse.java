@@ -41,6 +41,7 @@ public class GetBillsByUserIDResponse extends APIResponse {
             }
             success = true;
         } catch (JSONException e) {
+            e.printStackTrace();
             success = false;
         }
     }

@@ -41,8 +41,8 @@ public class ProfileActivity extends AppCompatActivity {
 
 
     private void initValues() {
-        ((TextView) findViewById(R.id.full_name)).setText(getString(R.string.profile_full_name) + mFirstName + " " + mLastName);
-        ((TextView) findViewById(R.id.user_name)).setText(getString(R.string.profile_username) + mUserName);
+        ((TextView) findViewById(R.id.full_name)).setText(getString(R.string.profile_full_name) + " "  + mFirstName + " " + mLastName);
+        ((TextView) findViewById(R.id.user_name)).setText(getString(R.string.profile_username) + " " + mUserName);
     }
 
     private void initAdapter() {
@@ -160,8 +160,6 @@ public class ProfileActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void param) {
             mTask = null;
-
-
 
             if ((response != null) && response.isSuccess()) {
                 mBillList = (ArrayList) response.toBillList();
