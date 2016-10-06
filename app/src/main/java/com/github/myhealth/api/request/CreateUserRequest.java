@@ -24,15 +24,10 @@ public class CreateUserRequest extends PostRequest {
     }
 
     @Override
-    protected JSONObject buildPostData() {
-        try {
-            return new JSONObject().accumulate("uname", username)
-                    .accumulate("password", password)
-                    .accumulate("fname", firstName)
-                    .accumulate("lname", lastName);
-        } catch (JSONException e) {
-            Log.d(LOG_TAG, e.getMessage());
-            return null;
-        }
+    protected JSONObject buildPostData() throws JSONException {
+        return new JSONObject().accumulate("uname", username)
+                .accumulate("password", password)
+                .accumulate("fname", firstName)
+                .accumulate("lname", lastName);
     }
 }

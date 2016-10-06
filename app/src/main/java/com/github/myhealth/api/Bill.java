@@ -114,7 +114,6 @@ public class Bill {
                 if(line.price == this.price)
                     if(line.code.equals(this.code))
                         if(line.description.equals(this.description))
-                            Log.d(LOG_TAG, "LINE EQUALS OTHER LINE!");
                             return true;
             }
             return false;

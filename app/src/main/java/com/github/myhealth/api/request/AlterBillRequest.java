@@ -13,7 +13,7 @@ import java.util.List;
  * Created by Henk Dieter Oordt on 27-9-2016.
  */
 
-public class AlterBillRequest extends PostRequest {
+public class AlterBillRequest extends PutRequest {
     private final String userId;
     private final String status;
     private final List<Bill.Line> lines;
