@@ -1,5 +1,7 @@
 package com.github.myhealth.api.response;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,7 +21,10 @@ public abstract class APIResponse {
     protected void parseRawResponse(String raw){
         try {
             success = new JSONObject(raw).getBoolean("success");
+            Log.d("parserawresponse", "parseRawResponse: successs");
         } catch (JSONException e) {
+            e.printStackTrace();
+            Log.d("parserawresponse", "parseRawResponse: exceptionnn");
             success = false;
         }
     }

@@ -32,9 +32,10 @@ public class LoginResponse extends APIResponse {
             JSONObject json = new JSONObject(raw);
             token = json.getString("key");
             success = json.getBoolean("success");
-            //userId = json.getString("userid");
-            userId = "57eccbbb549b665082c734a9";
+            userId = json.getJSONObject("user").getString("_id");
         } catch (JSONException e) {
+            e.printStackTrace();
+            Log.d("parserawresponse", "parseRawResponse: failed to parse response");
             success = false;
         }
 

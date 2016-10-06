@@ -37,36 +37,8 @@ public class ProfileActivity extends AppCompatActivity {
     private String mLastName;
     private String mUserName;
 
-    // TODO: Use real implementation instead of this mocked object
     private ArrayList<Bill> mBillList;
-    {
-        ArrayList<Bill.Line> mLineList = new ArrayList<>();
-        mLineList.add(new Bill.Line("test description", "TESTCODE", 12.3));
-        mLineList.add(new Bill.Line("test description", "TESTCODE", 12.3));
-        mLineList.add(new Bill.Line("test description", "TESTCODE", 12.3));
 
-        mBillList = new ArrayList<>();
-        mBillList.add(new Bill("57f4001464ae271261d85b49", userId, "paid", mLineList));
-
-        ArrayList<Bill.Line> mLineList2 = new ArrayList<>();
-        mLineList2.add(new Bill.Line("test description2", "TESTCODE2", 54.2));
-        mLineList2.add(new Bill.Line("test description2", "TESTCODE2", 54.2));
-        mLineList2.add(new Bill.Line("test description2", "TESTCODE2", 54.2));
-
-        mBillList.add(new Bill("92t7001464a3245171242319", userId, "paid", mLineList2));
-
-        ArrayList<Bill.Line> mLineList3 = new ArrayList<>();
-        mLineList3.add(new Bill.Line("test description3", "TESTCODE3", 58.8));
-        mLineList3.add(new Bill.Line("test description3", "TESTCODE3", 58.8));
-        mLineList3.add(new Bill.Line("test description3", "TESTCODE3", 58.8));
-
-        mBillList.add(new Bill("92t7001464a3245171242319", userId, "paid", mLineList3));
-        mBillList.add(new Bill("92t7001464a3245171242319", userId, "paid", mLineList3));
-        mBillList.add(new Bill("92t7001464a3245171242319", userId, "paid", mLineList3));
-        mBillList.add(new Bill("92t7001464a3245171242319", userId, "paid", mLineList3));
-        mBillList.add(new Bill("92t7001464a3245171242319", userId, "paid", mLineList3));
-        mBillList.add(new Bill("92t7001464a3245171242319", userId, "paid", mLineList3));
-    }
 
     private void initValues() {
         ((TextView) findViewById(R.id.full_name)).setText(getString(R.string.profile_full_name) + mFirstName + " " + mLastName);
@@ -95,10 +67,8 @@ public class ProfileActivity extends AppCompatActivity {
         mTask = new GetUserTask(userId, this);
         mTask.execute((Void) null);
 
-        initAdapter(); // TODO: Remove this from here, it will be done in GetBillsTask.
-        // TODO: Use the real implementation instead of mocked mBillList
-        //mTask = new GetBillsTask(userId, this);
-        //mTask.execute((Void) null);
+        mTask = new GetBillsTask(userId, this);
+        mTask.execute((Void) null);
 
     }
 
@@ -192,7 +162,8 @@ public class ProfileActivity extends AppCompatActivity {
             mTask = null;
 
 
-            if (response.isSuccess()) {
+
+            if ((response != null) && response.isSuccess()) {
                 mBillList = (ArrayList) response.toBillList();
                 initAdapter();
 
